@@ -95,8 +95,8 @@ custom_css()
 @st.cache_resource
 def load_food_model():
     model = from_pretrained_keras(
-        "aisyahnoviani16/food101-inception",  # ganti repo kamu
-        filename="inception_food101.keras"
+        "aisyahnoviani16/food101",  # ganti repo kamu
+        filename="inception_food101 (1).keras"
     )
     return model
 
@@ -189,3 +189,4 @@ elif page == "ℹ️ Tentang App":
 
     Dibuat dengan CINTA❤️ menggunakan **Streamlit + TensorFlow/Keras**.
     """)
+
