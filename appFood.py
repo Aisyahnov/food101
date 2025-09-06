@@ -1,8 +1,9 @@
-import streamlit as st
-import numpy as np
 from PIL import Image
-from keras.models import load_model
-from huggingface_hub import from_pretrained_keras
+import keras
+from huggingface_hub import hf_hub_download
+import streamlit as st
+from tensorflow.keras.preprocessing import image
+import numpy as np
 
 # Custom CSS Styling
 def custom_css():
@@ -93,13 +94,16 @@ custom_css()
 
 # Load Model
 @st.cache_resource
-def load_food_model():
-    model = from_pretrained_keras(
-        "aisyahnoviani16/food101",  # ganti repo kamu
-        filename="inception_food101 (1).keras"
+def load_model():
+    model_path = hf_hub_download(
+        repo_id="aisyahnoviani16/food101",
+        filename="inception_food101.keras"
     )
-    return model
+    return keras.models.load_model(model_path)
 
+# Panggil model sekali, biar cache-nya kepake
+with st.spinner(" Loading model..."):
+    model = load_model()
 
 # Food101 Labels
 food_labels = [
@@ -149,6 +153,7 @@ if page == "🍴 Food Classification":
             img_array = np.array(img_resized) / 255.0
             img_array = np.expand_dims(img_array, axis=0)
 
+            # Pakai model yang sudah dimuat
             preds = model.predict(img_array)
             top3_idx = np.argsort(preds[0])[-3:][::-1]
 
@@ -189,4 +194,3 @@ elif page == "ℹ️ Tentang App":
 
     Dibuat dengan CINTA❤️ menggunakan **Streamlit + TensorFlow/Keras**.
     """)
-
